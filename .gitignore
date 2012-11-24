@@ -1,0 +1,7 @@
+.*
+!.gitignore
+*.o
+/download
+/work
+/settings
+/*.tar.*

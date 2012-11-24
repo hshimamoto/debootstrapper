@@ -1,0 +1,60 @@
+#!/bin/sh
+# init
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+
+#
+mknod /dev/null c 1 3
+
+# IP address
+
+# eth0
+ifconfig eth0 10.0.2.15 netmask 255.255.255.0
+route add default gw 10.0.2.2
+
+# resolve
+cat > /etc/resolv.conf <<EOF
+nameserver 10.0.2.3
+EOF
+
+# default
+ARCH=amd64
+SUITE=squeeze
+
+# parse cmdline
+for arg in `cat /proc/cmdline`; do
+	echo $arg
+	case "$arg" in
+	arch=*)
+		ARCH=${arg#arch=}
+		;;
+	suite=*)
+		SUITE=${arg#suite=}
+		;;
+	esac
+done
+
+# proxy
+PROXY=http://10.0.2.2:8080/
+if [ -n "$PROXY" ]; then
+	http_proxy=$PROXY
+	https_proxy=$PROXY
+	ftp_proxy=$PROXY
+	export http_proxy
+	export https_proxy
+	export ftp_proxy
+fi
+
+echo "Run debootstrap"
+
+# debootstrap here
+debootstrap --arch $ARCH --foreign $SUITE \
+	/rootfs http://ftp.jp.debian.org/debian
+
+echo "Done"
+
+/bin/sh

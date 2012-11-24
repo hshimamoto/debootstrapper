@@ -1,0 +1,65 @@
+#!/bin/bash
+# vim:set filetype=sh syntax=sh:
+
+if [ -e settings ]; then
+	. settings
+fi
+
+FILES_DIR=$PWD/files
+TOOLS_DIR=$PWD/tools
+
+if [ -z "$DL_DIR" ]; then
+	DL_DIR=$PWD/download
+fi
+if [ -z "$WORK_DIR" ]; then
+	WORK_DIR=$PWD/work
+fi
+if [ -z "$PARALLEL_MAKE" ]; then
+	cpus=`grep processor /proc/cpuinfo | wc -l`
+	PARALLEL_MAKE="-j $cpus"
+fi
+
+# Functions
+MkDir() {
+	if [ ! -d $1 ]; then
+		mkdir -p $1
+	fi
+}
+
+Make() {
+	make $PARALLEL_MAKE "$@"
+}
+
+PushD() {
+	pushd $1 > /dev/null 2>&1
+}
+
+PopD() {
+	popd > /dev/null 2>&1
+}
+
+# Packages Data
+
+# busybox
+BB=busybox-1.20.2
+BBTAR=$BB.tar.bz2
+BBURL=http://busybox.net/downloads/$BBTAR
+
+# kernel
+KRN=linux-3.6.7
+KRNTAR=$KRN.tar.xz
+KRNURL=http://www.kernel.org/pub/linux/kernel/v3.x/$KRNTAR
+
+# perl
+PERL=perl-5.16.2
+PERLTAR=$PERL.tar.gz
+PERLURL=http://www.cpan.org/src/5.0/$PERLTAR
+
+# debootstrap
+DEB=debootstrap_1.0.26+squeeze1_all.deb
+DEBURL=http://ftp.jp.debian.org/debian/pool/main/d/debootstrap/$DEB
+
+# Preapre Directories
+#
+MkDir $DL_DIR
+MkDir $WORK_DIR
