@@ -46,7 +46,7 @@ BBTAR=$BB.tar.bz2
 BBURL=http://busybox.net/downloads/$BBTAR
 
 # kernel
-KRN=linux-3.6.7
+KRN=linux-3.7.3
 KRNTAR=$KRN.tar.xz
 KRNURL=http://www.kernel.org/pub/linux/kernel/v3.x/$KRNTAR
 

@@ -31,7 +31,7 @@ Work on x86_64 system.
     $ nc -l 1234 | xz -9 > squeeze.1st.<arch>.tar.xz
 
     $ qemu \
-        -kernel work/linux-3.6.7/arch/x86/boot/bzImage \
+        -kernel work/linux-3.7.3/arch/x86/boot/bzImage \
         -initrd work/initramfs/initramfs.img \
         -append "console=ttyS0 arch=amd64 panic=1" \
         -device virtio-net,netdev=vnic \
